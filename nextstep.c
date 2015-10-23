@@ -74,7 +74,7 @@ makeSum (struct Boid* const boid, const struct Boid* conductor, \
   if(boid -> neighbors != 0u)
     boid -> gamma = (double)boid -> ectoNeighbors / boid -> neighbors;
   else
-    boid -> gamma = 1000000.0
+    boid -> gamma = 1000000.0;
 }
 
 void
