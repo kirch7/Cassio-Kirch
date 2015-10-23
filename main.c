@@ -19,7 +19,8 @@ getGamma (const struct Boid* const boids)
   do
     {
       boidCount--;
-      gamma += boids[boidCount].gamma/endoBoids;
+      if (boids[boidCount].gamma <= 1.01)
+        gamma += boids[boidCount].gamma/endoBoids;
     }
   while(boidCount != 0);
 
@@ -33,14 +34,16 @@ one_system ()
   struct Box   box[BOXES];
   unsigned int boidCount, boxID, threadCount;
   unsigned long long int step, continuousStep = 0;
-  FILE* dat = initializeSingleFile();
+  //FILE* dat = initializeSingleFile();
   FILE* finalConfigurationFile;
   char finalConfigurationFileName[FILENAME_SIZE];
 #ifdef PLOT_EXIT_FILES
   FILE* endoFile;
   FILE* ectoFile;
 #endif
+#ifdef GAMMA_FILE
   FILE* gammaFile = initializeGammaFile();
+#endif
   
   /* Set the pthread_create parameters. */
   struct Parameters parametersStruct[NUM_THREADS];
@@ -65,10 +68,11 @@ one_system ()
       initializeBoid (&boid[boidCount]);
       checkLimits(&(boid[boidCount]));
     }
-  initializeBoxes(box);
   
+  initializeBoxes(box);
   for (boidCount=0; boidCount<N; boidCount++)
     appendBoid(&(boid[boidCount]), box);
+
   for (step=0; step<STEPS; ++step)
     {
       nextStep(parameters);
@@ -110,12 +114,17 @@ one_system ()
           fclose(endoFile);
           fclose(ectoFile);
 #endif
+#ifdef GAMMA_FILE
           fprintf(gammaFile, "%llu\t%lf\n", step, getGamma(boid));
+#endif
           ++continuousStep;
         }
     }
+#ifdef GAMMA_FILE
   fclose (gammaFile);
-  fclose (dat);
+#endif
+  //fclose (dat);
+
   sprintf(finalConfigurationFileName, "final_%s.dat", getDate());
   finalConfigurationFile = fopen(finalConfigurationFileName, "w");
   for (boidCount=0; boidCount<N; boidCount++)
