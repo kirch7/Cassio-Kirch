@@ -164,6 +164,7 @@ printHelp()
 int
 main (int argc, char** argv)
 {
+  setDate();
   if (argc > 1u)
     {
       if (strcmp(argv[1], "-p") == 0)
@@ -176,7 +177,6 @@ main (int argc, char** argv)
       int returned = checkParameters();
       if (returned != 0)
         return returned;
-      setDate();
       srand(time(NULL));
       one_system();
     }
