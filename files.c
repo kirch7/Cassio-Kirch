@@ -74,7 +74,7 @@ FILE*
 initializeGammaFile()
 {
   FILE* gammaFile;
-  char dateString[DATE_SIZE+1], fileName[FILENAME_SIZE];
+  char fileName[FILENAME_SIZE];
   sprintf(fileName, "gamma_%s.dat", dateString);
   gammaFile = fopen(fileName, "w");
   putParametersToFile(gammaFile);
