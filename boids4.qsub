@@ -1,0 +1,7 @@
+#PBS -j oe
+#PBS -q uma_semana
+#PBS -N boids4
+#PBS -l nodes=1:ppn=4
+cd $PBS_O_WORKDIR
+hostname
+./boids4
