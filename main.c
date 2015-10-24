@@ -21,11 +21,19 @@ getGamma (const struct Boid* const boids)
       boidCount--;
       if (boids[boidCount].gamma <= 1.01)
         gamma += boids[boidCount].gamma/endoBoids;
+#ifdef DEBUG
       if (boids[boidCount].type == ECTODERM)
         printf("Ecto cell treated as a endo one. %u\n", boidCount);
+#endif
     }
   while(boidCount != 0);
 
+#ifdef DEBUG
+  for (boidCount = endoBoids; boidCount < N; ++boidCount)
+      if (boids[boidCount].type == ENDODERM)
+        printf("Endo cell treated as a ecto one. %u\n", boidCount);
+#endif
+  
   return gamma;
 }
 
@@ -38,7 +46,6 @@ one_system ()
   unsigned long long int step, continuousStep = 0;
   //FILE* dat = initializeSingleFile();
   FILE* finalConfigurationFile;
-  char finalConfigurationFileName[FILENAME_SIZE];
 #ifdef PLOT_EXIT_FILES
   FILE* endoFile;
   FILE* ectoFile;
@@ -128,8 +135,8 @@ one_system ()
 #endif
   //fclose (dat);
 
-  sprintf(finalConfigurationFileName, "final_%s.dat", getDate());
-  finalConfigurationFile = fopen(finalConfigurationFileName, "w");
+  
+  finalConfigurationFile = initializeFinalConfigurationFile();
   for (boidCount=0; boidCount<N; boidCount++)
     {
       fprintf(finalConfigurationFile,                                 \
