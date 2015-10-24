@@ -1,5 +1,6 @@
 #include "boid.h"
 
+
 FILE* initializeSingleFile ();
 
 FILE* initializeStepAndTypeFile (const unsigned long long int step,     \
@@ -11,3 +12,5 @@ FILE* initializeFinalConfigurationFile();
 void setDate ();
 
 char* getDate();
+
+void printParameters();

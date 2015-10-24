@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "define.h"
 #include "comp_errors.h"
@@ -28,6 +29,7 @@ getGamma (const struct Boid* const boids)
     }
   while(boidCount != 0);
 
+  
 #ifdef DEBUG
   for (boidCount = endoBoids; boidCount < N; ++boidCount)
       if (boids[boidCount].type == ENDODERM)
@@ -44,12 +46,15 @@ one_system ()
   struct Box   box[BOXES];
   unsigned int boidCount, boxID, threadCount;
   unsigned long long int step, continuousStep = 0;
+
   //FILE* dat = initializeSingleFile();
   FILE* finalConfigurationFile;
+
 #ifdef PLOT_EXIT_FILES
   FILE* endoFile;
   FILE* ectoFile;
 #endif
+
 #ifdef GAMMA_FILE
   FILE* gammaFile = initializeGammaFile();
 #endif
@@ -148,14 +153,32 @@ one_system ()
   fclose (finalConfigurationFile);
 }
 
-int
-main ()
+void
+printHelp()
 {
-  int returned = checkParameters();
-  if (returned != 0)
-    return returned;
-  setDate();
-  srand(time(NULL));
-  one_system();
+  printf("-h\t" "Show this help menu.\n");
+  printf("-p\t" "Show the parameters compiled.\n");
+  
+}
+
+int
+main (int argc, char** argv)
+{
+  if (argc > 1u)
+    {
+      if (strcmp(argv[1], "-p") == 0)
+        printParameters();
+      else
+        printHelp();
+    }
+  else
+    {
+      int returned = checkParameters();
+      if (returned != 0)
+        return returned;
+      setDate();
+      srand(time(NULL));
+      one_system();
+    }
   return 0;
 }

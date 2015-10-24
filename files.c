@@ -102,3 +102,8 @@ FILE* initializeFinalConfigurationFile()
   return finalConfigurationFile;
 }
 
+void
+printParameters()
+{
+  putParametersToFile(stdout);
+}
