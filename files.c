@@ -24,8 +24,9 @@ setDate ()
 void
 putParametersToFile(FILE* file)
 {
-  fprintf(file, "#Modo 'um sistema' com alpha e beta fixos.\n"           \
-          "#%s\n"                                                       \
+  fprintf(file, "#Modo 'um sistema' com alpha e beta fixos.\n"          \
+          "#Compiled at %s %s\n"                                        \
+          "#Runned at\t%s\n"                                            \
           "#ALPHA11 = %lf\n"                                            \
           "#ALPHA12 = %lf\n"                                            \
           "#ALPHA22 = %lf\n"                                            \
@@ -47,8 +48,9 @@ putParametersToFile(FILE* file)
           "#BOXES_IN_EDGE =    %u\n"                                    \
           "#STEPS =  %u\n"                                              \
           "#EXIT_INTERVAL = %d\n#\n"                                    \
-          "#THREADS: %u\n", dateString, ALPHA11,                        \
-          ALPHA12, ALPHA22,                                             \
+          "#THREADS: %u\n",                                             \
+          __DATE__, __TIME__, dateString,                               \
+          ALPHA11, ALPHA12, ALPHA22,                                    \
           BETA11, BETA12, BETA22,                                       \
           (unsigned int)N, ETA, V0,                                     \
           NEIGHBOR_DISTANCE, DT,                                        \
