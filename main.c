@@ -21,6 +21,8 @@ getGamma (const struct Boid* const boids)
       boidCount--;
       if (boids[boidCount].gamma <= 1.01)
         gamma += boids[boidCount].gamma/endoBoids;
+      if (boids[boidCount].type == ECTODERM)
+        printf("Ecto cell treated as a endo one. %u\n", boidCount);
     }
   while(boidCount != 0);
 
@@ -88,6 +90,7 @@ one_system ()
         }
       if (step%EXIT_INTERVAL == 0)
         {
+          printf("Step: %llu\n", step);
 #ifdef PLOT_EXIT_FILES
           endoFile = initializeStepAndTypeFile (continuousStep, ENDODERM);
           ectoFile = initializeStepAndTypeFile (continuousStep, ECTODERM);
