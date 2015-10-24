@@ -91,3 +91,14 @@ initializeStepAndTypeFile (const unsigned long long int step,   \
   dat = fopen(fileName, "w");
   return dat;
 }
+
+FILE* initializeFinalConfigurationFile()
+{
+  FILE* finalConfigurationFile;
+  char fileName[FILENAME_SIZE];
+  sprintf(fileName, "final_%s.dat", dateString);
+  finalConfigurationFile = fopen(fileName, "w");
+  putParametersToFile(finalConfigurationFile);
+  return finalConfigurationFile;
+}
+
