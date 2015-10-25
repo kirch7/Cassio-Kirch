@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-#include <sys/stat.h>
+//#include <sys/stat.h>
 
 #include "define.h"
 #include "files.h"
@@ -18,7 +18,7 @@ setDate ()
 {
   time_t now = time(NULL);
   struct tm* tmP = localtime(&now);
-  strftime(dateString, DATE_SIZE, "%Y%m%d_%Hh%Mmin%ssec", tmP);
+  strftime(dateString, DATE_SIZE, "%Y%m%d_%Hh%Mmin%Ssec", tmP);
 }
 
 void

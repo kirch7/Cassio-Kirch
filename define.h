@@ -7,8 +7,8 @@
 #define GAMMA_FILE
 
 #define ENDOPROP               0.25
-#define N                      2000
-#define RANGE                  200.0
+#define N                      6400
+#define RANGE                  240.0
 #define PROP                   0.35
 #define SEED                   13049        /* Must be unsigned int. */
 #define DIMENSIONS             2
@@ -27,9 +27,9 @@
 #define BETA12                 2.53
 #define BETA22                 2.50
 #define DT                     1.0
-#define DATE_SIZE              24           /* Size of string */
+#define DATE_SIZE              36           /* Size of string */
 #define FILENAME_SIZE          128           /* Size of string */
-#define STEPS                  10000000000
+#define STEPS                  10000000
 #define EXIT_INTERVAL          1000
 #define NUM_THREADS            8
 
