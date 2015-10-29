@@ -12,9 +12,9 @@ moviename=$(ls one_system*dat).avi
 
 gpParameters="notitle w p ps 3 pt 7"
 
-range=$(grep "\#define RANGE " define.h | awk '{print $3*0.5}')
+range=$(./boids4 -p | grep "RANGE " | awk '{print $3*0.5}')
 
-steps=$(( $(grep "\#define STEPS " define.h | awk '{print $3}') / $(grep "\#define EXIT_INTERVAL " define.h | awk '{print $3}') ))
+steps=$(( $(./boids4 -p | grep "STEPS " | awk '{print $3}') / $(grep "\#define EXIT_INTERVAL " define.h | awk '{print $3}') ))
 
 echo -e "\nsteps: $steps"
 for (( i=0; i<$steps ; i++ ))
