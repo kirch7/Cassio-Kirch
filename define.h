@@ -7,29 +7,29 @@
 #define GAMMA_FILE
 
 #define ENDOPROP               0.25
-#define N                      6400
+#define N                      3200
 #define RANGE                  240.0
 #define PROP                   0.35
 #define SEED                   13049        /* Must be unsigned int. */
 #define DIMENSIONS             2
-#define BOXES                  22500
-#define BOXES_IN_EDGE          150
+#define BOXES                  32400
+#define BOXES_IN_EDGE          180
 #define NEIGHBOR_DISTANCE      1.32              /* r0 */
-#define CORE_RADIUS            0.4          /* rc */
+#define CORE_RADIUS            0.4               /* rc */
 #define ELASTIC_DISTANCE       1.0               /* re */
 #define INFINITE_FORCE         10000.0
 #define ETA                    1.0
-#define V0                     0.1
+#define V0                     0.007
 #define ALPHA11                0.01
 #define ALPHA12                0.01
 #define ALPHA22                0.01
-#define BETA11                 3.83
-#define BETA12                 2.53
-#define BETA22                 2.50
+#define BETA11                 0.3
+#define BETA12                 0.16
+#define BETA22                 0.15
 #define DT                     1.0
 #define DATE_SIZE              36           /* Size of string */
 #define FILENAME_SIZE          128           /* Size of string */
-#define STEPS                  10000000
+#define STEPS                  250000000
 #define EXIT_INTERVAL          1000
 #define NUM_THREADS            8
 
