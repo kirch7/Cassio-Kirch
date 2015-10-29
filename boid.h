@@ -23,9 +23,5 @@ struct Boid
 
 unsigned int getBoxID (struct Boid boid);
 
-void initializeCircle (struct Boid* const boid);
-
-void initializeRectangle (struct Boid* const boid);
-
 void initializeBoid (struct Boid* const boid);
 
