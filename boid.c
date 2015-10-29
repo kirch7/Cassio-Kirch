@@ -25,6 +25,18 @@ getBoxID (struct Boid boid)
 }
 
 void
+initializeCircleCorrectly(struct Boid* const boid)
+{
+  double angle, radius;
+  angle  = RANDOM_0(PI*2.0);
+  radius = sqrt(RANDOM_0(1.0)) *                \
+    sqrt(N * 0.137832224) * ELASTIC_DISTANCE;
+  /* R^2 = re^2 * N * sqrt(3) / (4 pi) */
+  boid -> position[X] = radius * cos(angle);
+  boid -> position[Y] = radius * sin(angle);
+}
+
+void
 initializeCircle (struct Boid* const boid)
 {
   double angle, radius;
@@ -46,7 +58,7 @@ initializeBoid (struct Boid* const boid)
 {
   static unsigned int boidCount = 0;
   static unsigned int endoBoids = (unsigned)(ENDOPROP*N);
-  initializeCircle (boid);
+  initializeCircleCorrectly (boid);
   boid -> velocity[X]  = 0.0;
   boid -> velocity[Y]  = 0.0;
   boid -> boxID        = getBoxID (*boid);
