@@ -74,6 +74,7 @@ makeSum (struct Boid* const boid, const struct Boid* conductor, \
         else /* Assume endo. */
           boid -> endoNeighbors++;
 #endif
+
       }
     }
     conductor = conductor -> next;

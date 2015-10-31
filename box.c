@@ -11,11 +11,11 @@ initializeBoxes (struct Box* const box) /* The input is an array. */
 {
   unsigned int boxCount;
   for (boxCount=0; boxCount<BOXES; ++boxCount)
-    {
-      box[boxCount].boxID = boxCount;
-      box[boxCount].first = NULL;
-      box[boxCount].last  = NULL;
-    }
+  {
+    box[boxCount].boxID = boxCount;
+    box[boxCount].first = NULL;
+    box[boxCount].last  = NULL;
+  }
 }
 
 bool
@@ -43,11 +43,11 @@ appendBoid (struct Boid* const boid, struct Box* const box)
   if (conductor == NULL)
     box[boid -> boxID].first = boid;
   else
-    {
-      while (conductor -> next != 0)
-        conductor = conductor -> next;
-      conductor -> next = boid;
-    }
+  {
+    while (conductor -> next != 0)
+      conductor = conductor -> next;
+    conductor -> next = boid;
+  }
   boid -> previous  = conductor;
   boid -> next = NULL;
   box[boid -> boxID].last = boid;
