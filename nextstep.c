@@ -31,50 +31,50 @@ makeSum (struct Boid* const boid, const struct Boid* conductor, \
   struct Distance distance;
   double force;
   while (conductor != NULL)
+  {
+    if (boid != conductor)
     {
-      if (boid != conductor)
+      distance = getDistance (boid, conductor);
+      if (distance.module <= NEIGHBOR_DISTANCE)
+      {
+        //boid -> neighbors++;
+        force = getForce (distance.module);
+        
+        if (conductor -> type == ENDODERM &&    \
+            boid -> type == ENDODERM)
         {
-          distance = getDistance (boid, conductor);
-          if (distance.module < NEIGHBOR_DISTANCE)
-            {
-              boid -> neighbors++;
-              force = getForce (distance.module);
-
-              if (conductor -> type == ENDODERM &&      \
-                  boid -> type == ENDODERM)
-                {
-                  *sumFX += BETA11 * force * distance.cosine;
-                  *sumFY += BETA11 * force * distance.sine;
-                  *sumVX += ALPHA11 * conductor -> velocity[X] / V0;
-                  *sumVY += ALPHA11 * conductor -> velocity[Y] / V0;
-                }
-
-              else if (conductor -> type == ECTODERM && \
-                       boid -> type == ECTODERM)
-                {
-                  *sumFX += BETA22 * force * distance.cosine;
-                  *sumFY += BETA22 * force * distance.sine;
-                  *sumVX += ALPHA22 * conductor -> velocity[X] / V0;
-                  *sumVY += ALPHA22 * conductor -> velocity[Y] / V0;
-                }
-
-              else
-                {
-                  *sumFX += BETA12 * force * distance.cosine;
-                  *sumFY += BETA12 * force * distance.sine;
-                  *sumVX += ALPHA12 * conductor -> velocity[X] / V0;
-                  *sumVY += ALPHA12 * conductor -> velocity[Y] / V0;
-                  if (conductor -> type == ECTODERM) /* And boid->type==ENDO */
-                    boid -> ectoNeighbors++;
-                }
-            }
+          *sumFX += BETA11 * force * distance.cosine;
+          *sumFY += BETA11 * force * distance.sine;
+          *sumVX += ALPHA11 * conductor -> velocity[X] / V0;
+          *sumVY += ALPHA11 * conductor -> velocity[Y] / V0;
         }
-      conductor = conductor -> next;
+        
+        else if (conductor -> type == ECTODERM &&       \
+                 boid -> type == ECTODERM)
+        {
+          *sumFX += BETA22 * force * distance.cosine;
+          *sumFY += BETA22 * force * distance.sine;
+          *sumVX += ALPHA22 * conductor -> velocity[X] / V0;
+          *sumVY += ALPHA22 * conductor -> velocity[Y] / V0;
+        }
+        
+        else
+        {
+          *sumFX += BETA12 * force * distance.cosine;
+          *sumFY += BETA12 * force * distance.sine;
+          *sumVX += ALPHA12 * conductor -> velocity[X] / V0;
+          *sumVY += ALPHA12 * conductor -> velocity[Y] / V0;
+          //if (conductor -> type == ECTODERM) /* And boid->type==ENDO */
+          //boid -> ectoNeighbors++;
+        }
+        if (conductor -> type == ECTODERM)
+          boid -> ectoNeighbors++;
+        else /* Assume endo. */
+          boid -> endoNeighbors++;
+      }
     }
-  if(boid -> neighbors != 0u)
-    boid -> gamma = (double)boid -> ectoNeighbors / boid -> neighbors;
-  else
-    boid -> gamma = 1000000.0;
+    conductor = conductor -> next;
+  }
 }
 
 void
@@ -86,10 +86,10 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
   double sum, sumX, sumY;
   struct Boid *conductor;
   
-  boid -> neighbors = 0;
-  boid -> ectoNeighbors = 0;
+  boid -> endoNeighbors = 0u;
+  boid -> ectoNeighbors = 0u;
   boid -> gamma = 0.0;
-
+  
   /* check neighbors in the same box */
   conductor = box[boid -> boxID].first;
   makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
@@ -97,19 +97,19 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
   /* check neighbors in the north box */
   conductor = box[getNorthBoxID (boid -> boxID)].first;
   makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
-
+  
   /* check neighbors in the south box */
   conductor = box[getSouthBoxID (boid -> boxID)].first;
   makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
-
+  
   /* check neighbors in the west box */
   conductor = box[getWestBoxID (boid -> boxID)].first;
   makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
-
+  
   /* check neighbors in the east box */
   conductor = box[getEastBoxID (boid -> boxID)].first;
   makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
-
+  
   /* check neighbors in the northeast box */
   conductor = box[getEastBoxID (getNorthBoxID (boid -> boxID))].first;
   makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
@@ -136,6 +136,9 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
 
   boid -> newVelocity[X] = V0 * sumX / sum;
   boid -> newVelocity[Y] = V0 * sumY / sum;
+
+  if (boid -> ectoNeighbors != 0u || boid -> endoNeighbors != 0u)
+    boid -> gamma = (double)boid -> ectoNeighbors / boid -> neighbors;
 }
 
 void
