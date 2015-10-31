@@ -10,7 +10,7 @@ struct Boid
   struct Boid* next;         /* Considering on the same box... */
   struct Boid* previous;     /* ... (same list).               */
   unsigned int boxID;
-  unsigned int neighbors;
+  unsigned int endoNeighbors;
   unsigned int ectoNeighbors;
   cellType type;             /* Endo or ectoderm. */
   double   gamma;
