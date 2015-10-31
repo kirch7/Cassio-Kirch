@@ -1,4 +1,4 @@
-#include <stdio.h>
+]#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
@@ -67,10 +67,13 @@ makeSum (struct Boid* const boid, const struct Boid* conductor, \
           //if (conductor -> type == ECTODERM) /* And boid->type==ENDO */
           //boid -> ectoNeighbors++;
         }
+
+#if defined(ENDO_GAMMA) || defined(ECTO_GAMMA) || defined(COUNT_NEIGHBORS)
         if (conductor -> type == ECTODERM)
           boid -> ectoNeighbors++;
         else /* Assume endo. */
           boid -> endoNeighbors++;
+#endif
       }
     }
     conductor = conductor -> next;
@@ -138,7 +141,8 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
   boid -> newVelocity[Y] = V0 * sumY / sum;
 
   if (boid -> ectoNeighbors != 0u || boid -> endoNeighbors != 0u)
-    boid -> gamma = (double)boid -> ectoNeighbors / boid -> neighbors;
+    boid -> gamma = (double)boid -> ectoNeighbors / \
+      (boid -> endoNeighbors + boid -> ectoNeighbors);
 }
 
 void
