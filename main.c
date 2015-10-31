@@ -37,12 +37,15 @@ getGamma (const struct Boid* const boids)
   double gamma = 0.0;
   unsigned int boidCount;
   unsigned int endoBoids = (unsigned)(ENDOPROP*N);
+  //  printf("EndoBoids: %u\n", endoBoids);
   
 #ifdef ENDO_GAMMA
   for (boidCount = endoBoids; boidCount < N; --boidCount)
   /* Considering overflow. */
     gamma += boids[boidCount].gamma;
 #endif
+  //  printf("BoidCount: %u\n", boidCount);
+  
 
 #ifdef ECTO_GAMMA
   for (boidCount = endoBoids + 1; boidCount < N; ++boidCount)
