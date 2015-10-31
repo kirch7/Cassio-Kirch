@@ -46,19 +46,19 @@ putParametersToFile(FILE* file)
           "#SEED  =  %u\n"                                              \
           "#BOXES =  %u\n"                                              \
           "#BOXES_IN_EDGE =    %u\n"                                    \
-          "#STEPS =  %u\n"                                              \
-          "#EXIT_INTERVAL = %d\n#\n"                                    \
+          "#STEPS =  %llu\n"                                            \
+          "#EXIT_INTERVAL = %llu\n#\n"                                  \
           "#THREADS: %u\n",                                             \
           __DATE__, __TIME__, dateString,                               \
           ALPHA11, ALPHA12, ALPHA22,                                    \
           BETA11, BETA12, BETA22,                                       \
-          (unsigned int)N, ETA, V0,                                     \
+          N, ETA, V0,                                                   \
           NEIGHBOR_DISTANCE, DT,                                        \
           CORE_RADIUS, ELASTIC_DISTANCE,                                \
           INFINITE_FORCE, RANGE,                                        \
-          PROP, (unsigned int)SEED, (unsigned int)BOXES,                \
-          (unsigned int)BOXES_IN_EDGE, (unsigned int)STEPS,             \
-          (unsigned int)EXIT_INTERVAL, (unsigned int)NUM_THREADS);
+          PROP, SEED, BOXES,                                            \
+          BOXES_IN_EDGE, STEPS,                                         \
+          EXIT_INTERVAL, NUM_THREADS);
 }
 
 FILE*
