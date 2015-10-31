@@ -3,7 +3,7 @@
 mv one_system*dat old/
 rm *.dat
 
-make optimize || exit 1
+#make optimize || exit 1
 ./boids4 || exit $?
 
 rm pictures/[0-9]*.png &> /dev/null || echo "nada removido"
@@ -14,7 +14,7 @@ gpParameters="notitle w p ps 3 pt 7"
 
 range=$(./boids4 -p | grep "RANGE " | awk '{print $3*0.5}')
 
-steps=$(( $(./boids4 -p | grep "STEPS " | awk '{print $3}') / $(grep "\#define EXIT_INTERVAL " define.h | awk '{print $3}') ))
+steps=$(( $(./boids4 -p | grep "STEPS " | awk '{print $3}') / $(./boids4 -p | grep "EXIT_INTERVAL " | awk '{print $3}') ))
 
 echo -e "\nsteps: $steps"
 for (( i=0; i<$steps ; i++ ))
