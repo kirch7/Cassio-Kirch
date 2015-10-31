@@ -65,7 +65,10 @@ initializeBoid (struct Boid* const boid)
   boid -> next         = NULL;
   boid -> previous     = NULL;
 
+#if defined (ENDO_GAMMA) || defined (ECTO_GAMMA)
   boid -> gamma = 0.0;
+#endif
+  
   if (boidCount < endoBoids)
     boid -> type = ENDODERM;
   else

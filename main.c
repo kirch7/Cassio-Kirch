@@ -20,6 +20,7 @@
   #endif
 #endif
 
+#ifdef COUNT_NEIGHBORS
 double
 getAverageNeighborsNo(const struct Boid* const boid)
 {
@@ -30,7 +31,9 @@ getAverageNeighborsNo(const struct Boid* const boid)
                                    boid[boidCount].ectoNeighbors) / N;
   return averageNeighborsNo;
 }
+#endif
 
+#if defined(ENDO_GAMMA) || defined(ECTO_GAMMA)
 double
 getGamma (const struct Boid* const boids)
 {
@@ -86,6 +89,7 @@ for (boidCount = (unsigned)(ENDOPROP*N); boidCount < N; ++boidCount)
 
   return gamma;
 }
+#endif /* #if defined(ENDO_GAMMA) || defined(ECTO_GAMMA) */
 
 void
 one_system ()

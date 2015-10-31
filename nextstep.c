@@ -89,10 +89,12 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
   double sumFX = 0.0, sumFY = 0.0;    /* For beta and force sum. */
   double sum, sumX, sumY;
   struct Boid *conductor;
-  
+
+#if defined (ENDO_GAMMA) || defined (ECTO_GAMMA)
   boid -> endoNeighbors = 0u;
   boid -> ectoNeighbors = 0u;
   boid -> gamma = 0.0;
+#endif
   
   /* check neighbors in the same box */
   conductor = box[boid -> boxID].first;
@@ -141,9 +143,11 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
   boid -> newVelocity[X] = V0 * sumX / sum;
   boid -> newVelocity[Y] = V0 * sumY / sum;
 
+#if defined (ENDO_GAMMA) || defined (ECTO_GAMMA)
   if (boid -> ectoNeighbors != 0u || boid -> endoNeighbors != 0u)
     boid -> gamma = (double)boid -> ectoNeighbors / \
       (boid -> endoNeighbors + boid -> ectoNeighbors);
+#endif
 }
 
 void
