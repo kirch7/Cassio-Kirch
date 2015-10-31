@@ -21,6 +21,17 @@
 #endif
 
 double
+getAverageNeighborsNo(const struct Boid* const boid)
+{
+  unsigned int boidCount;
+  double averageNeighborsNo = 0.0;
+  for (boidCount = 0; boidCount < N; ++boidCount)
+    averageNeighborsNo += (double)(boid[boidCount].endoNeighbors +   \
+                                   boid[boidCount].ectoNeighbors) / N;
+  return averageNeighborsNo;
+}
+
+double
 getGamma (const struct Boid* const boids)
 {
   double gamma = 0.0;
@@ -34,7 +45,7 @@ getGamma (const struct Boid* const boids)
 #endif
 
 #ifdef ECTO_GAMMA
-  for (boidCount = endoBoids + 1; boidCount <= N; ++boidCount)
+  for (boidCount = endoBoids + 1; boidCount < N; ++boidCount)
     gamma += boids[boidCount].gamma;
 #endif
 
@@ -137,6 +148,11 @@ one_system ()
     if (step%EXIT_INTERVAL == 0)
     {
       printf("Step: %llu\n", step);
+
+#ifdef COUNT_NEIGHBORS
+      printf("Average neighbors: %lf\n", getAverageNeighborsNo(boid));
+#endif
+      
 #ifdef PLOT_EXIT_FILES
       endoFile = initializeStepAndTypeFile (continuousStep, ENDODERM);
       ectoFile = initializeStepAndTypeFile (continuousStep, ECTODERM);
