@@ -30,7 +30,7 @@ initializeCircleCorrectly(struct Boid* const boid)
   double angle, radius;
   angle  = RANDOM_0(PI*2.0);
   radius = sqrt(RANDOM_0(1.0)) *                \
-    sqrt(N * 0.137832224) * ELASTIC_DISTANCE;
+    sqrt(0.137832224 * N) * ELASTIC_DISTANCE;
   /* R^2 = re^2 * N * sqrt(3) / (4 pi) */
   boid -> position[X] = radius * cos(angle);
   boid -> position[Y] = radius * sin(angle);
