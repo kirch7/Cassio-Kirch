@@ -68,26 +68,6 @@ getGamma (const struct Boid* const boids)
   #endif
 #endif
   
-/*
-  double gamma = 0.0;
-  unsigned int endoBoids = (unsigned)(ENDOPROP*N);
-  unsigned int boidCount = endoBoids;
-
-  do
-  {
-    boidCount--;
-    if (boids[boidCount].gamma <= 1.01)
-      gamma += boids[boidCount].gamma/endoBoids;
-  }
-  while(boidCount != 0);
-*/
-  
-#ifdef DEBUG
-for (boidCount = (unsigned)(ENDOPROP*N); boidCount < N; ++boidCount)
-  if (boids[boidCount].type == ENDODERM)
-    printf("Endo cell treated as a ecto one. %u\n", boidCount);
-#endif
-
   return gamma;
 }
 #endif /* #if defined(ENDO_GAMMA) || defined(ECTO_GAMMA) */
@@ -100,7 +80,7 @@ one_system ()
   unsigned int boidCount, boxID, threadCount;
   unsigned long long int step, continuousStep = 0;
 
-  FILE* godFile = initializeSingleFile();
+  FILE* godFile = initializeGodFile();
   FILE* finalConfigurationFile;
 
 #ifdef PLOT_EXIT_FILES
@@ -110,6 +90,10 @@ one_system ()
 
 #ifdef GAMMA_FILE
   FILE* gammaFile = initializeGammaFile();
+#endif
+
+#ifdef COUNT_NEIGHBORS
+  FILE* averageNeighborsFile = initializeAverageNeighborsFile();
 #endif
   
   /* Set the pthread_create parameters. */
@@ -158,7 +142,7 @@ one_system ()
       printf("Step: %llu\n", step);
 
 #ifdef COUNT_NEIGHBORS
-      printf("Average neighbors: %lf\n", getAverageNeighborsNo(boid));
+      fprintf(averageNeighborsFile, "%llu\t%lf\n", step, getAverageNeighborsNo(boid));
 #endif
       
 #ifdef PLOT_EXIT_FILES
@@ -197,9 +181,13 @@ one_system ()
 #ifdef GAMMA_FILE
   fclose (gammaFile);
 #endif
+
+#ifdef COUNT_NEIGHBORS
+  fclose(averageNeighborsFile);
+#endif
+  
   fclose (godFile);
-  
-  
+    
   finalConfigurationFile = initializeFinalConfigurationFile();
   for (boidCount=0; boidCount<N; boidCount++)
   {

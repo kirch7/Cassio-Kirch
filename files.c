@@ -62,7 +62,7 @@ putParametersToFile(FILE* file)
 }
 
 FILE*
-initializeSingleFile ()
+initializeGodFile ()
 {
   FILE* dat;
   char fileName[FILENAME_SIZE];
@@ -82,6 +82,19 @@ initializeGammaFile()
   putParametersToFile(gammaFile);
   return gammaFile;
 }
+
+#ifdef COUNT_NEIGHBORS
+FILE*
+initializeAverageNeighborsFile ()
+{
+  FILE* myFile;
+  char fileName[FILENAME_SIZE];
+  sprintf(fileName, "avgNeighbors_%s.dat", dateString);
+  myFile = fopen(fileName, "w");
+  putParametersToFile(myFile);
+  return myFile;
+}
+#endif
 
 FILE*
 initializeStepAndTypeFile (const unsigned long long int step,   \
