@@ -27,8 +27,9 @@ getAverageNeighborsNo(const struct Boid* const boid)
   unsigned int boidCount;
   double averageNeighborsNo = 0.0;
   for (boidCount = 0; boidCount < N; ++boidCount)
-    averageNeighborsNo += (double)(boid[boidCount].endoNeighbors +   \
-                                   boid[boidCount].ectoNeighbors) / N;
+    averageNeighborsNo += ((double)boid[boidCount].endoNeighbors +  \
+                           (double)boid[boidCount].ectoNeighbors);
+  averageNeighborsNo /= N;
   return averageNeighborsNo;
 }
 #endif
@@ -139,7 +140,7 @@ one_system ()
   for (boidCount=0; boidCount<N; boidCount++)
     appendBoid(&(boid[boidCount]), box);
   
-  for (step=0; step<STEPS; ++step)
+  for (step=0; step <= STEPS; ++step)
   {
     nextStep(parameters);
     for (boidCount=0; boidCount<N; boidCount++)
