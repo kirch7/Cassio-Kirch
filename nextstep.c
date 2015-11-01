@@ -70,14 +70,15 @@ makeSum (struct Boid* const boid, const struct Boid* conductor, \
 
 #if defined(ENDO_GAMMA) || defined(ECTO_GAMMA) || defined(COUNT_NEIGHBORS)
         if (conductor -> type == ECTODERM)
-          boid -> ectoNeighbors++;
+          (boid -> ectoNeighbors)++;
         else /* Assume endo. */
-          boid -> endoNeighbors++;
+          (boid -> endoNeighbors)++;
 #endif
 
       }
     }
     conductor = conductor -> next;
+    //    printf("Endo: %u\t" "Ecto: %u\n", boid -> endoNeighbors, boid -> ectoNeighbors);
   }
 }
 
@@ -90,7 +91,7 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
   double sum, sumX, sumY;
   struct Boid *conductor;
 
-#if defined (ENDO_GAMMA) || defined (ECTO_GAMMA)
+#if defined (ENDO_GAMMA) || defined (ECTO_GAMMA) || defined (COUNT_NEIGHBORS)
   boid -> endoNeighbors = 0u;
   boid -> ectoNeighbors = 0u;
   boid -> gamma = 0.0;
