@@ -213,7 +213,7 @@ int
 main (int argc, char** argv)
 {
   setDate();
-  if (argc > 1u)
+  if (argc > 1)
   {
     if (strcmp(argv[1], "-p") == 0)
       printParameters();
