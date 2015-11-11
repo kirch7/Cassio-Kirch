@@ -23,6 +23,7 @@
 #ifdef COUNT_NEIGHBORS
 double
 getAverageNeighborsNo(const struct Boid* const boid)
+/* Where 'boid' is address of the first element of an array. */
 {
   unsigned int boidCount;
   double averageNeighborsNo = 0.0;
