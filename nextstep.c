@@ -25,8 +25,8 @@ checkLimits (struct Boid* const boid)
 
 void
 makeSum (struct Boid* const boid, const struct Boid* conductor, \
-         double* const sumFX, double* const sumFY,              \
-         double* const sumVX, double* const sumVY)
+         double* const sumF, double* const sumV)
+/* Where 'sumF' and 'sumV' are arrays. */
 {
   struct Distance distance;
   double force;
@@ -43,51 +43,49 @@ makeSum (struct Boid* const boid, const struct Boid* conductor, \
         if (conductor -> type == ENDODERM &&    \
             boid -> type == ENDODERM)
         {
-          *sumFX += BETA11 * force * distance.cosine;
-          *sumFY += BETA11 * force * distance.sine;
-          *sumVX += ALPHA11 * conductor -> velocity[X] / V0;
-          *sumVY += ALPHA11 * conductor -> velocity[Y] / V0;
+          sumF[X] += BETA11 * force * distance.cosine;
+          sumF[Y] += BETA11 * force * distance.sine;
+          sumV[X] += ALPHA11 * conductor -> velocity[X] / V0;
+          sumV[Y] += ALPHA11 * conductor -> velocity[Y] / V0;
         }
         
         else if (conductor -> type == ECTODERM &&       \
                  boid -> type == ECTODERM)
         {
-          *sumFX += BETA22 * force * distance.cosine;
-          *sumFY += BETA22 * force * distance.sine;
-          *sumVX += ALPHA22 * conductor -> velocity[X] / V0;
-          *sumVY += ALPHA22 * conductor -> velocity[Y] / V0;
+          sumF[X] += BETA22 * force * distance.cosine;
+          sumF[Y] += BETA22 * force * distance.sine;
+          sumV[X] += ALPHA22 * conductor -> velocity[X] / V0;
+          sumV[Y] += ALPHA22 * conductor -> velocity[Y] / V0;
         }
         
         else
         {
-          *sumFX += BETA12 * force * distance.cosine;
-          *sumFY += BETA12 * force * distance.sine;
-          *sumVX += ALPHA12 * conductor -> velocity[X] / V0;
-          *sumVY += ALPHA12 * conductor -> velocity[Y] / V0;
-          //if (conductor -> type == ECTODERM) /* And boid->type==ENDO */
-          //boid -> ectoNeighbors++;
+          sumF[X] += BETA12 * force * distance.cosine;
+          sumF[Y] += BETA12 * force * distance.sine;
+          sumV[X] += ALPHA12 * conductor -> velocity[X] / V0;
+          sumV[Y] += ALPHA12 * conductor -> velocity[Y] / V0;
         }
 
 #if defined(ENDO_GAMMA) || defined(ECTO_GAMMA) || defined(COUNT_NEIGHBORS)
         if (conductor -> type == ECTODERM)
           (boid -> ectoNeighbors)++;
-        else /* Assume endo. */
+        else /* Assume ENDODERM. */
           (boid -> endoNeighbors)++;
 #endif
 
       }
     }
     conductor = conductor -> next;
-    //    printf("Endo: %u\t" "Ecto: %u\n", boid -> endoNeighbors, boid -> ectoNeighbors);
   }
 }
 
 void
 setNextVelocity (struct Boid* const boid, const struct Box box[])
+/* Where 'boid' is address of a single struct and box is a array. */
 {
-  double sumVX = 0.0, sumVY = 0.0;    /* For alpha and velocity sum. */
-  double uAngle, uX, uY;    /* For nu and random things. */
-  double sumFX = 0.0, sumFY = 0.0;    /* For beta and force sum. */
+  double sumV[] = {0.0, 0.0};    /* For alpha and velocity sum. */
+  double uAngle, u[2];    /* For eta and random things. */
+  double sumF[] = {0.0, 0.0};    /* For beta and force sum. */
   double sum, sumX, sumY;
   struct Boid *conductor;
 
@@ -99,46 +97,46 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
   
   /* check neighbors in the same box */
   conductor = box[boid -> boxID].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+  makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the north box */
   conductor = box[getNorthBoxID (boid -> boxID)].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the south box */
   conductor = box[getSouthBoxID (boid -> boxID)].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the west box */
   conductor = box[getWestBoxID (boid -> boxID)].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the east box */
   conductor = box[getEastBoxID (boid -> boxID)].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the northeast box */
   conductor = box[getEastBoxID (getNorthBoxID (boid -> boxID))].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
 
   /* check neighbors in the southeast box */
   conductor = box[getEastBoxID (getSouthBoxID (boid -> boxID))].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
 
   /* check neighbors in the northwest box */
   conductor = box[getWestBoxID (getNorthBoxID (boid -> boxID))].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
 
   /* check neighbors in the southwest box */
   conductor = box[getWestBoxID (getSouthBoxID (boid -> boxID))].first;
-  makeSum(boid, conductor, &sumFX, &sumFY, &sumVX, &sumVY);
+    makeSum(boid, conductor, sumF, sumV);
 
   uAngle = RANDOM_0 (PI * 2.0);
-  uX = cos (uAngle);
-  uY = sin (uAngle);
+  u[X] = cos (uAngle);
+  u[Y] = sin (uAngle);
 
-  sumX = (double) ETA * uX + sumVX + sumFX;
-  sumY = (double) ETA * uY + sumVY + sumFY;
+  sumX = (ETA * u[X]) + sumV[X] + sumF[X];
+  sumY = (ETA * u[Y]) + sumV[Y] + sumF[Y];
   sum = sqrt (pow (sumX, 2.0) + pow (sumY, 2.0));
 
   boid -> newVelocity[X] = V0 * sumX / sum;
@@ -182,11 +180,6 @@ callNextVelocityThread (void *input)
   struct Boid* const boid = parameters -> boid;    /* struct Boid array. */
   struct Box* const box = parameters -> box;    /* struct Box array. */
   unsigned int boidCount;
-
-  /*for (boidCount = parameters  ->  left;      \
-     boidCount < parameters  ->  right;       \
-     ++boidCount)
-     checkLimits(boid+boidCount); */
 
   for (boidCount = parameters -> left;
        boidCount < parameters -> right; ++boidCount)
