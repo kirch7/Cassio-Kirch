@@ -7,9 +7,9 @@ struct Parameters
   unsigned int threadID;
   unsigned int left;
   unsigned int right;
-  struct Boid* boid;
+  struct Boid* boids;
   struct Boid* firstEndoBoid;
-  struct Box*  box;
+  struct Box*  boxes;
 };
 #define PARAMETERS_STRUCT
 #endif

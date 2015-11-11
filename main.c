@@ -76,8 +76,8 @@ getGamma (const struct Boid* const boids)
 void
 one_system ()
 {
-  struct Boid  boid[N];
-  struct Box   box[BOXES];
+  struct Boid  boids[N];
+  struct Box   boxes[BOXES];
   unsigned int boidCount, boxID, threadCount;
   unsigned long long int step, continuousStep = 0;
 
@@ -110,32 +110,32 @@ one_system ()
       ((int)N/(int)NUM_THREADS);
     if (threadCount == NUM_THREADS-1)
       parametersStruct[threadCount].right += N%NUM_THREADS;
-    parametersStruct[threadCount].boid = boid;
-    parametersStruct[threadCount].box  = box;
+    parametersStruct[threadCount].boids = boids;
+    parametersStruct[threadCount].boxes  = boxes;
     parameters[threadCount] = &(parametersStruct[threadCount]);
   }
   
   for (boidCount=0; boidCount<N; boidCount++)
   {
-    initializeBoid (&boid[boidCount]);
-    checkLimits(&(boid[boidCount]));
+    initializeBoid (&boids[boidCount]);
+    checkLimits(&(boids[boidCount]));
   }
   
-  initializeBoxes(box);
+  initializeBoxes(boxes);
   for (boidCount=0; boidCount<N; boidCount++)
-    appendBoid(&(boid[boidCount]), box);
+    appendBoid(&(boids[boidCount]), boxes);
   
   for (step=0; step <= STEPS; ++step)
   {
     nextStep(parameters);
     for (boidCount=0; boidCount<N; boidCount++)
     {
-      checkLimits(&(boid[boidCount]));
-      boxID = getBoxID(boid[boidCount]);
-      if (boid[boidCount].boxID != boxID)
+      checkLimits(&(boids[boidCount]));
+      boxID = getBoxID(boids[boidCount]);
+      if (boids[boidCount].boxID != boxID)
       {
-        removeBoid(&boid[boidCount], box);
-        appendBoid(&boid[boidCount], box);
+        removeBoid(&boids[boidCount], boxes);
+        appendBoid(&boids[boidCount], boxes);
       }
     }
     if (step%EXIT_INTERVAL == 0)
@@ -143,7 +143,7 @@ one_system ()
       printf("Step: %llu\n", step);
 
 #ifdef COUNT_NEIGHBORS
-      fprintf(averageNeighborsFile, "%llu\t%lf\n", step, getAverageNeighborsNo(boid));
+      fprintf(averageNeighborsFile, "%llu\t%lf\n", step, getAverageNeighborsNo(boids));
 #endif
       
 #ifdef PLOT_EXIT_FILES
@@ -153,28 +153,28 @@ one_system ()
       {
         /*fprintf(godFile, "%llu\t" "%llu\t" "%u\t" "%u\t"              \
           "%lf\t" "%lf\n", continuousStep, step,                        \
-          boid[boidCount].type, boidCount,                              \
-          boid[boidCount].position[X],                                  \
-          boid[boidCount].position[Y]);
+          boids[boidCount].type, boidCount,                              \
+          boids[boidCount].position[X],                                  \
+          boids[boidCount].position[Y]);
         */
         
-        if (boid[boidCount].type == ENDODERM)
+        if (boids[boidCount].type == ENDODERM)
           fprintf(endoFile, "%u\t" "%u\t" "%lf\t" "%lf\n",            \
-                  boid[boidCount].type,                               \
-                  boidCount, boid[boidCount].position[X],             \
-                  boid[boidCount].position[Y]);
+                  boids[boidCount].type,                               \
+                  boidCount, boids[boidCount].position[X],             \
+                  boids[boidCount].position[Y]);
         
         else
           fprintf(ectoFile, "%u\t" "%u\t" "%lf\t" "%lf\n",            \
-                  boid[boidCount].type,                               \
-                  boidCount, boid[boidCount].position[X],             \
-                  boid[boidCount].position[Y]);
+                  boids[boidCount].type,                               \
+                  boidCount, boids[boidCount].position[X],             \
+                  boids[boidCount].position[Y]);
       }
       fclose(endoFile);
       fclose(ectoFile);
 #endif
 #ifdef GAMMA_FILE
-      fprintf(gammaFile, "%llu\t%lf\n", step, getGamma(boid));
+      fprintf(gammaFile, "%llu\t%lf\n", step, getGamma(boids));
 #endif
       ++continuousStep;
     }
@@ -194,9 +194,9 @@ one_system ()
   {
     fprintf(finalConfigurationFile,                                   \
             "%u\t" "%u\t" "%lf\t" "%lf\n",                            \
-            boid[boidCount].type, boidCount,                          \
-            boid[boidCount].position[X],                              \
-            boid[boidCount].position[Y]);
+            boids[boidCount].type, boidCount,                          \
+            boids[boidCount].position[X],                              \
+            boids[boidCount].position[Y]);
   }
   fclose (finalConfigurationFile);
 }

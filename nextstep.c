@@ -80,8 +80,8 @@ makeSum (struct Boid* const boid, const struct Boid* conductor, \
 }
 
 void
-setNextVelocity (struct Boid* const boid, const struct Box box[])
-/* Where 'boid' is address of a single struct and box is a array. */
+setNextVelocity (struct Boid* const boid, const struct Box* boxes)
+/* Where 'boid' is address of a single struct and 'boxes' is a array. */
 {
   double sumV[] = {0.0, 0.0};    /* For alpha and velocity sum. */
   double uAngle, u[2];    /* For eta and random things. */
@@ -96,39 +96,39 @@ setNextVelocity (struct Boid* const boid, const struct Box box[])
 #endif
   
   /* check neighbors in the same box */
-  conductor = box[boid -> boxID].first;
+  conductor = boxes[boid -> boxID].first;
   makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the north box */
-  conductor = box[getNorthBoxID (boid -> boxID)].first;
+  conductor = boxes[getNorthBoxID (boid -> boxID)].first;
     makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the south box */
-  conductor = box[getSouthBoxID (boid -> boxID)].first;
+  conductor = boxes[getSouthBoxID (boid -> boxID)].first;
     makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the west box */
-  conductor = box[getWestBoxID (boid -> boxID)].first;
+  conductor = boxes[getWestBoxID (boid -> boxID)].first;
     makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the east box */
-  conductor = box[getEastBoxID (boid -> boxID)].first;
+  conductor = boxes[getEastBoxID (boid -> boxID)].first;
     makeSum(boid, conductor, sumF, sumV);
   
   /* check neighbors in the northeast box */
-  conductor = box[getEastBoxID (getNorthBoxID (boid -> boxID))].first;
+  conductor = boxes[getEastBoxID (getNorthBoxID (boid -> boxID))].first;
     makeSum(boid, conductor, sumF, sumV);
 
   /* check neighbors in the southeast box */
-  conductor = box[getEastBoxID (getSouthBoxID (boid -> boxID))].first;
+  conductor = boxes[getEastBoxID (getSouthBoxID (boid -> boxID))].first;
     makeSum(boid, conductor, sumF, sumV);
 
   /* check neighbors in the northwest box */
-  conductor = box[getWestBoxID (getNorthBoxID (boid -> boxID))].first;
+  conductor = boxes[getWestBoxID (getNorthBoxID (boid -> boxID))].first;
     makeSum(boid, conductor, sumF, sumV);
 
   /* check neighbors in the southwest box */
-  conductor = box[getWestBoxID (getSouthBoxID (boid -> boxID))].first;
+  conductor = boxes[getWestBoxID (getSouthBoxID (boid -> boxID))].first;
     makeSum(boid, conductor, sumF, sumV);
 
   uAngle = RANDOM_0 (PI * 2.0);
@@ -162,14 +162,14 @@ void*
 callNextPositionThread (void* const input)
 {
   const struct Parameters* const parameters = input;
-  struct Boid* const boid = parameters -> boid;  /* struct Boid array. */
-  //struct Box* const box  = parameters  ->  box;  /* struct Box array. */
+  struct Boid* const boids = parameters -> boids;  /* struct Boid array. */
+  //struct Box* const boxes  = parameters  ->  boxes;  /* struct Box array. */
 
   unsigned int boidCount;
 
   for (boidCount = parameters -> left;
        boidCount < parameters -> right; ++boidCount)
-    setNextPosition ((boid + boidCount));
+    setNextPosition ((boids + boidCount));
   return NULL;
 }
 
@@ -177,13 +177,13 @@ void*
 callNextVelocityThread (void *input)
 {
   const struct Parameters* const parameters = input;
-  struct Boid* const boid = parameters -> boid;    /* struct Boid array. */
-  struct Box* const box = parameters -> box;    /* struct Box array. */
+  struct Boid* const boids = parameters -> boids;    /* struct Boid array. */
+  struct Box* const boxes = parameters -> boxes;    /* struct Box array. */
   unsigned int boidCount;
 
   for (boidCount = parameters -> left;
        boidCount < parameters -> right; ++boidCount)
-    setNextVelocity (boid + boidCount, box);
+    setNextVelocity (boids + boidCount, boxes);
   return NULL;
 }
 
