@@ -130,7 +130,6 @@ one_system ()
     nextStep(parameters);
     for (boidCount=0; boidCount<N; boidCount++)
     {
-      checkLimits(&(boids[boidCount]));
       boxID = getBoxID(boids[boidCount]);
       if (boids[boidCount].boxID != boxID)
       {

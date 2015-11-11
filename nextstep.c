@@ -169,7 +169,10 @@ callNextPositionThread (void* const input)
 
   for (boidCount = parameters -> left;
        boidCount < parameters -> right; ++boidCount)
-    setNextPosition ((boids + boidCount));
+  {
+    setNextPosition (boids + boidCount);
+    checkLimits(boids + boidCount);
+  }
   return NULL;
 }
 
