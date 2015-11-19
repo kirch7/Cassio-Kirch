@@ -34,6 +34,7 @@ putParametersToFile(FILE* file)
           "#BETA12  = %lf\n"                                            \
           "#BETA22  = %lf\n"                                            \
           "#N   =     %d\n"                                             \
+          "#ENDOPROP = %lf\n"                                           \
           "#ETA =     %lf\n"                                            \
           "#V0  =     %lf\n"                                            \
           "#R0  =     %lf\n"                                            \
@@ -52,7 +53,7 @@ putParametersToFile(FILE* file)
           __DATE__, __TIME__, dateString,                               \
           ALPHA11, ALPHA12, ALPHA22,                                    \
           BETA11, BETA12, BETA22,                                       \
-          N, ETA, V0,                                                   \
+          N, ENDOPROP, ETA, V0,                                         \
           NEIGHBOR_DISTANCE, DT,                                        \
           CORE_RADIUS, ELASTIC_DISTANCE,                                \
           INFINITE_FORCE, RANGE,                                        \
